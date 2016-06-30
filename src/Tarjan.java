@@ -9,34 +9,34 @@ import java.util.HashMap;
 class Tarjan {
     ArrayDeque<Integer> stack;
     HashMap<Integer, ArrayList<Integer>> adjacencyList;
-    Integer sizeV;
+    Integer nVertexes;
     Integer lowlinks[];
-    Integer indexs[];
+    Integer indeces[];
     Integer id;
 
     Tarjan(HashMap<Integer, ArrayList<Integer>> map) {
         id = 0;
         adjacencyList = map;
-        sizeV = map.size();
-        lowlinks = new Integer[sizeV];
-        indexs = new Integer[sizeV];
+        nVertexes = map.size();
+        lowlinks = new Integer[nVertexes];
+        indeces = new Integer[nVertexes];
         stack = new ArrayDeque<>();
     }
 
     void setAdjacencyList(HashMap<Integer, ArrayList<Integer>> map) {
         adjacencyList = map;
-        sizeV = adjacencyList.size();
+        nVertexes = adjacencyList.size();
     }
 
     ObservableMap<Integer, ArrayList<Integer>> FindStronglyComponents()
     {
         id = 0;
-        Arrays.fill(indexs, 0);
-        Arrays.fill(lowlinks, sizeV);
+        Arrays.fill(indeces, 0);
+        Arrays.fill(lowlinks, nVertexes);
         ObservableMap<Integer, ArrayList<Integer>> resmap = FXCollections.observableHashMap();
-        Boolean used[] = new Boolean[sizeV];
+        Boolean used[] = new Boolean[nVertexes];
         Arrays.fill(used, false);
-        for (Integer i = 0; i < sizeV; i++)
+        for (Integer i = 0; i < nVertexes; i++)
             if (!used[i])
                 dfs(i, used, resmap);
         return resmap;
@@ -46,18 +46,18 @@ class Tarjan {
     {
         used[v] = true;
         lowlinks[v] = id;
-        indexs[v] = id++;
+        indeces[v] = id++;
         stack.push(v);
         for (Integer val : adjacencyList.get(v)) {
             if (!used[val]) {
                 dfs(val, used, resMap);
                 lowlinks[v] = Integer.min(lowlinks[v], lowlinks[val]);
             } else if (stack.contains(val)) {
-                lowlinks[v] = Integer.min(lowlinks[v], indexs[val]);
+                lowlinks[v] = Integer.min(lowlinks[v], indeces[val]);
             }
         }
         ArrayList<Integer> resSet = new ArrayList<>();
-        if (indexs[v] == lowlinks[v]) {
+        if (indeces[v] == lowlinks[v]) {
             while (stack.peek() != v) {
                 resSet.add(stack.pop());
             }
